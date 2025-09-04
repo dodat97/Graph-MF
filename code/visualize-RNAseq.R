@@ -18,11 +18,11 @@ subsample_cell_types <- function (x, n = 1000) {
   return(sort(cells))
 }
 
-setwd("~/Documents/single-cell-jamboree/visualization-graph")
-load("../data/pancreas.RData")
-load("../output/pancreas_factors.RData")
+setwd("~/Documents/Graph-MF")
+load("data/pancreas.RData")
+load("data/pancreas_factors.RData")
 timings0 <- timings
-load("../output/pancreas_factors2.RData")
+load("data/pancreas_factors2.RData")
 timings <- c(timings0,timings)
 
 cells <- subsample_cell_types(sample_info$celltype,n = 500)

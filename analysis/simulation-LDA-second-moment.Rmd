@@ -1,0 +1,289 @@
+---
+title: "simulation-LDA-second-moment"
+author: "Dat Do"
+date: "2025-09-03"
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+The goal of this project is to visualize the relationship between factors in (Sparse) Matrix Factorization and topics in Latent Dirichlet Allocation (LDA). 
+
+
+```{r setup, message=F, warning=F}
+library(igraph)
+library(MASS)
+library(MCMCpack)
+library(RColorBrewer)
+```
+
+Data generating distribution
+```{r}
+
+
+### Bifurcating tree L (each row is either 0 or exponentially distributed)
+rMixPostiveManifold <- function(n, pis, rates){
+  # Generate loading matrix from a bifurcating tree with 3 levels, 7 nodes, 4 path in total
+  samples <- matrix(0, nrow=n, ncol=7)
+  comp <- numeric(n)
+  comp <- sample(1:4, size=n, replace = TRUE, prob = pis)
+  path = matrix(c(1, 2, 3,
+                  1, 2, 4,
+                  1, 5, 6, 
+                  1, 5, 7),
+                nrow=4, ncol=3, byrow = TRUE)
+  sorted_indx = c()
+  for (i in 1:4){
+    idx <- which(comp == i)
+    sorted_indx <- c(sorted_indx, idx)
+    if (length(idx) > 0){
+      samples[idx, path[i, 1]] <- rexp(length(idx), rate=rates[1])
+      samples[idx, path[i, 2]] <- rexp(length(idx), rate=rates[2])
+      samples[idx, path[i, 3]] <- rexp(length(idx), rate=rates[3])
+    }
+  }
+  L = samples[sorted_indx, ]
+  return(L)
+}
+
+# L = rMixPostiveManifold(n=100, pis=rep(.25, 4), rates=rep(1, 3))
+# View(L)
+
+
+
+### admixture L (each row sum up to 1)
+rMixSimplex <- function(n, pis, alphas){
+  # Generate loading matrix from a bifurcating tree with 3 levels, 7 nodes, 4 path in total
+  samples <- matrix(0, nrow=n, ncol=7)
+  comp <- numeric(n)
+  comp <- sample(1:4, size=n, replace = TRUE, prob = pis)
+  path = matrix(c(1, 2, 3,
+                  1, 2, 4,
+                  1, 5, 6, 
+                  1, 5, 7),
+                nrow=4, ncol=3, byrow = TRUE)
+  sorted_indx = c()
+  for (i in 1:4){
+    idx <- which(comp == i)
+    sorted_indx <- c(sorted_indx, idx)
+    if (length(idx) > 0){
+      samples[idx, path[i, ]] <- rdirichlet(length(idx), alpha=alphas)
+    }
+  }
+  L = samples[sorted_indx, ]
+  return(L)
+}
+
+
+```
+
+Admixture barplot of this loading matrix:
+```{r}
+## Generate true loading and plot
+n = 700
+L = rMixSimplex(n=n, pis=rep(.25, 4), alphas=c(.1, .1, .1))
+
+
+colors7 <- brewer.pal(7, "Set3")   # qualitative, good for categories
+colors7
+
+colnames(L) <- paste0(1:7)
+
+barplot(t(L), beside = FALSE, col = colors7,
+        border = NA, space = 0,
+        xlab = "Individuals", ylab = "Proportion", las = 2)
+legend("topright", legend = colnames(L), fill = colors7)
+```
+
+Here is the adjacency matrix formed by the second moments of $L$:
+
+```{r}
+## plot the graph
+A = t(L) %*% L
+diag(A) = 0
+A = A / max(A) * 8
+g <- graph_from_adjacency_matrix(A, mode = "undirected", weighted=TRUE)
+
+# Plot it
+plot(g,
+     vertex.size = 30,
+     vertex.label.cex = 1.2,
+     vertex.color = "skyblue",
+     edge.color = "gray40",
+     edge.width = E(g)$weight,   # scale edge thickness by weight
+     layout = layout_with_fr)
+
+```
+
+
+Now let us generate text counting data from this loading matrix (by first generate the word-topic matrix randomly then simulate via LDA model). Then we fit LDA model in to get the estimated $L$ matrix.
+```{r}
+## Generate document data from the true loading 
+library(topicmodels)
+library(tm)
+
+V = 20
+K = 7
+beta <- matrix(0, nrow = K, ncol = V)
+for (k in 1:K) {
+  beta[k, ] <- rdirichlet(1, alpha = rep(0.2, V))  
+}
+
+doc_word_prob = L %*% beta
+doc_mat = matrix(0, nrow = n, ncol = V)
+for (d in 1:n){
+  doc_mat[d, ] = rmultinom(1, size=100, prob=doc_word_prob[d, ])
+}
+### It is interesting that setting size small (=50) will give uniform posterior
+
+print(doc_mat[3, ])
+
+colnames(doc_mat) <- paste0("w", 1:V)
+rownames(doc_mat) <- paste0("d", 1:n)
+dtm <- as.DocumentTermMatrix(as.matrix(doc_mat), weighting = weightTf)
+
+# Fit LDA with topicmodels (VEM)
+lda_fit <- LDA(doc_mat, k = K, method = "VEM", control = list(seed = 123))
+
+# Inspect results
+topics <- terms(lda_fit, 5)         # top 5 words per topic
+L_hat <- posterior(lda_fit)$topics  # doc-topic distributions
+
+barplot(t(L_hat[(1:n)%%5==0, ]), beside = FALSE, col = colors7,
+        border = NA, space = 0,
+        ylab = "Proportion", las = 2)
+
+A_hat = t(L_hat) %*% L_hat
+diag(A_hat) = 0
+A_adj = A_hat / max(A_hat) * 8
+g <- graph_from_adjacency_matrix(A_adj, mode = "undirected", weighted=TRUE)
+
+# Plot it
+plot(g,
+     vertex.size = 30,
+     vertex.label.cex = 1.2,
+     vertex.color = "skyblue",
+     edge.color = "gray40",
+     edge.width = E(g)$weight,   # scale edge thickness by weight
+     layout = layout_with_fr)
+
+```
+
+The second moment of the estimated $L$ is not as sparse due to estimation error. However, there are many edges in this graph with weights almost zero. We can flatten the set of edges' weights to see
+
+```{r}
+hist(as.vector(A_hat))
+```
+
+We can use an Exponential Spike-and-Slab to separate noise from signal.
+
+```{r}
+
+## thank ChatGPT
+fit_mixgamma <- function(x, pi_init=0.5,
+                         shape1_init=2, scale1_init=1,
+                         shape2_init=5, scale2_init=2,
+                         tol=1e-6, max_iter=200, verbose=FALSE) {
+  n <- length(x)
+  
+  # Initialize
+  pi <- pi_init
+  shape1 <- shape1_init; scale1 <- scale1_init
+  shape2 <- shape2_init; scale2 <- scale2_init
+  loglik_old <- -Inf
+  
+  # weighted gamma MLE using constrained optim
+  weighted_gamma_mle <- function(x, wts, init) {
+    nll <- function(par) {
+      sh <- exp(par[1]); sc <- exp(par[2])  # enforce positivity
+      dens <- dgamma(x, shape=sh, scale=sc, log=TRUE)
+      if (any(!is.finite(dens))) return(1e10)  # penalty for invalid params
+      -sum(wts * dens)
+    }
+    opt <- optim(log(init),
+                 nll,
+                 method="L-BFGS-B",
+                 lower=log(1e-6), upper=log(1e3),
+                 control=list(fnscale=1))
+    c(shape=exp(opt$par[1]), scale=exp(opt$par[2]))
+  }
+  
+  for (iter in 1:max_iter) {
+    # E-step
+    dens1 <- dgamma(x, shape=shape1, scale=scale1)
+    dens2 <- dgamma(x, shape=shape2, scale=scale2)
+    mix_dens <- (1 - pi) * dens1 + pi * dens2
+    w <- pi * dens2 / pmax(mix_dens, .Machine$double.eps)
+    
+    # M-step
+    pi <- mean(w)
+    p1 <- weighted_gamma_mle(x, 1 - w, c(shape1, scale1))
+    shape1 <- p1["shape"]; scale1 <- p1["scale"]
+    p2 <- weighted_gamma_mle(x, w, c(shape2, scale2))
+    shape2 <- p2["shape"]; scale2 <- p2["scale"]
+    
+    # log-likelihood
+    dens1 <- dgamma(x, shape=shape1, scale=scale1)
+    dens2 <- dgamma(x, shape=shape2, scale=scale2)
+    ll <- sum(log((1 - pi) * dens1 + pi * dens2))
+    
+    if (verbose) cat(sprintf("Iter %d: pi=%.3f, ll=%.2f\n", iter, pi, ll))
+    
+    if (!is.finite(ll)) {
+      warning("Log-likelihood became non-finite. Stopping early.")
+      break
+    }
+    if (abs(ll - loglik_old) < tol) break
+    loglik_old <- ll
+  }
+  
+  list(pi=pi,
+       shape1=shape1, scale1=scale1,
+       shape2=shape2, scale2=scale2,
+       loglik=ll, iter=iter)
+}
+x = as.vector(A_hat)
+ret = fit_mixgamma(x)
+
+
+x_range <- seq(0, max(x), length.out=200)
+
+# densities
+y1 <- (1-ret$pi) * dgamma(x_range, shape=ret$shape1, scale=ret$scale1)
+y2 <- ret$pi * dgamma(x_range, shape=ret$shape2, scale=ret$scale2)
+
+# histogram with density scale
+hist(as.vector(A_hat), breaks=30, freq=FALSE, col="lightgray",
+     border="white", main="Histogram + Exponential PDFs",
+     xlab="x", ylab="Density")
+
+# add pdf curves
+lines(x_range, y1, col="blue", lwd=2)
+lines(x_range, y2, col="red", lwd=2, lty=2)
+
+# legend
+legend("topright", legend=c(paste0("Exp(", ret$lambda1, ")"),
+                            paste0("Exp(", ret$lambda2, ")")),
+       col=c("blue", "red"), lwd=2, lty=c(1,2))
+
+```
+
+```{r}
+thresh = x_range[sum(y1 > y2)]
+
+A_threshed = A_hat * (A_hat > thresh)
+
+A_threshed = A_threshed / max(A_threshed) * 8
+g <- graph_from_adjacency_matrix(A_threshed, mode = "undirected", weighted=TRUE)
+
+# Plot it
+plot(g,
+     vertex.size = 30,
+     vertex.label.cex = 1.2,
+     vertex.color = "skyblue",
+     edge.color = "gray40",
+     edge.width = E(g)$weight,   # scale edge thickness by weight
+     layout = layout_with_fr)
+```

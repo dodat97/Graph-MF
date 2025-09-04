@@ -12,59 +12,66 @@ library(gbcd)
 data(hnscc)
 dim(hnscc$Y)
 head(hnscc$info)
+# 
+# ## t-sne plot of the data
+# set.seed(1)
+# cols <- order(apply(hnscc$Y,2,sd),decreasing = TRUE)
+# cols <- cols[1:3000]
+# res  <- Rtsne(as.matrix(hnscc$Y[,cols]),normalize = TRUE)
+# colnames(res$Y) <- c("tsne1","tsne2")
+# pdat <- cbind(res$Y,hnscc$info)
+# ggplot(pdat,aes(x = tsne1,y = tsne2,color = sample,shape = subtype)) +
+#   geom_point(size = 1) + scale_color_manual(values = hnscc$sample_col) +
+#   scale_shape_manual(values = c(15,16,18)) +
+#   theme_cowplot(font_size = 10)
+# 
+# 
+# ## gbcd analysis
+# res.gbcd <- fit_gbcd(Y = hnscc$Y, Kmax = 12, maxiter1 = 100,
+#                      maxiter2 = 50, maxiter3 = 50, 
+#                      prior = flash_ebnm(prior_family = "generalized_binary",
+#                                         scale = 0.04))
+# 
+# head(round(res.gbcd$L, 3))
+# 
+# ## plot
+# 
 
-## t-sne plot of the data
-set.seed(1)
-cols <- order(apply(hnscc$Y,2,sd),decreasing = TRUE)
-cols <- cols[1:3000]
-res  <- Rtsne(as.matrix(hnscc$Y[,cols]),normalize = TRUE)
-colnames(res$Y) <- c("tsne1","tsne2")
-pdat <- cbind(res$Y,hnscc$info)
-ggplot(pdat,aes(x = tsne1,y = tsne2,color = sample,shape = subtype)) +
-  geom_point(size = 1) + scale_color_manual(values = hnscc$sample_col) +
-  scale_shape_manual(values = c(15,16,18)) +
-  theme_cowplot(font_size = 10)
+# 
+# 
+# L = res.gbcd$L
+# 
+# setwd("~/Documents/single-cell-jamboree/visualization-graph")
+# saveRDS(L, file='cancer_L.rds')
+# 
+# 
+# dim(L)
 
+#############
+# Visualization
+setwd("~/Documents/Graph-MF")
+# L = loadRDS(here("data","cancer_L.rds"))
+L = readRDS('data/cancer_L.rds')
+dim(L)
 
-## gbcd analysis
-res.gbcd <- fit_gbcd(Y = hnscc$Y, Kmax = 12, maxiter1 = 100,
-                     maxiter2 = 50, maxiter3 = 50, 
-                     prior = flash_ebnm(prior_family = "generalized_binary",
-                                        scale = 0.04))
-
-head(round(res.gbcd$L, 3))
-
-## plot
 
 anno <- data.frame(sample = hnscc$info$sample, subtype = hnscc$info$subtype)
-rownames(anno) <- rownames(res.gbcd$L)
+rownames(anno) <- rownames(L)
 anno_colors <- list(sample = hnscc$sample_col, subtype = hnscc$subtype_col)
 cols <- colorRampPalette(c("gray96", "red"))(50)
 brks <- seq(0, 1, 0.02)
 
-pheatmap(res.gbcd$L[order(anno$sample), -c(1)], cluster_rows = FALSE,
+pheatmap(L[order(anno$sample), -c(1)], cluster_rows = FALSE,
          cluster_cols = FALSE, show_rownames = FALSE, annotation_row = anno,
          annotation_colors = anno_colors, annotation_names_row = FALSE,
          angle_col = 45, fontsize = 9, color = cols, breaks = brks,
          main = "")
 
 
+# L = L[, c(2:21, 1)] ## put baseline factor on the bottom
+L = L[, c(2:21)] ## put baseline factor on the bottom
 
-L = res.gbcd$L
-
-setwd("~/Documents/single-cell-jamboree/visualization-graph")
-saveRDS(L, file='cancer_L.rds')
-
-
-dim(L)
-
-#############
-# Visualization
-L = loadRDS('cancer_L.rds')
-dim(L)
-L = L[, c(2:21, 1)] ## put baseline factor on the bottom
-
-L = res.gbcd$L[, c(2:21)]
+# L = res.gbcd$L[, c(2:21)]
 
 library(igraph)
 A = t(L) %*% L
@@ -128,5 +135,12 @@ plot(g,
      edge.width = E(g)$weight,   # scale edge thickness by weight
      layout = layout_with_fr)
 
+df <- as.data.frame(V[, c(1,2, 3, 8, 9, 11, 12, 15, 17, 19, 20)])
 
+library(dplyr)
 
+a =df %>%
+  group_by(across(everything())) %>%
+  summarise(count = n(), .groups = "drop")
+
+b = sort(a$count / 2176, decreasing = TRUE)

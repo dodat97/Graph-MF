@@ -1,0 +1,246 @@
+---
+title: "Pancreas-data-visual"
+author: "Dat Do"
+date: "2025-09-05"
+output:
+  workflowr::wflow_html:
+    toc: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=7, dpi=150)
+library(Matrix)
+library(fastTopics)
+library(ggplot2)
+library(cowplot)
+library(RColorBrewer)
+library(igraph)
+
+set.seed(1)
+```
+
+We want to visualize the connectivity of factors in pancreas data, where connection of factor i and j is defined by the amount of color i and j that appear in a same cell (in the admixture barplot). The hope is to see
+
+(1) How data-set factors connect to cell-type factors
+(2) Ideally, cell-type factors are not connected to each other
+
+So the output would somehow ``resemble'' what we want to see in additive clustering. 
+
+First we plot the admixture barplots that Peter made. (Thanks, Peter!)
+
+```{r, warning=FALSE, message=FALSE}
+subsample_cell_types <- function (x, n = 1000) {
+  cells <- NULL
+  groups <- levels(x)
+  for (g in groups) {
+    i  <-  which(x == g)
+    n0 <- min(n,length(i))
+    i  <- sample(i,n0)
+    cells <- c(cells,i)
+  }
+  return(sort(cells))
+}
+
+setwd("~/Documents/Graph-MF")
+load("data/pancreas.RData")
+load("data/pancreas_factors.RData")
+timings0 <- timings
+load("data/pancreas_factors2.RData")
+timings <- c(timings0,timings)
+
+cells <- subsample_cell_types(sample_info$celltype,n = 1000)
+L <- fl_nmf_ldf$L
+k <- ncol(L)
+colnames(L) <- paste0("k",1:k)
+batch_factors    <- c(2:5,7:8,20)
+celltype_factors <- c(6,11:19,21)
+other_factors    <- c(1,9:10,22:23)
+celltype <- sample_info$celltype
+celltype <-
+  factor(celltype,
+         c("acinar","ductal","activated_stellate","quiescent_stellate",
+           "endothelial","macrophage","mast","schwann","t_cell","alpha",
+           "beta","delta","gamma","epsilon"))
+p1 <- structure_plot(L,topics = batch_factors,grouping = sample_info$tech,
+                     gap = 3,perplexity = 70,n = 500) +
+  labs(y = "membership",title = "data-set factors",
+       fill = "factor",color = "factor")
+p2 <- structure_plot(L[cells,],topics = celltype_factors,
+                     grouping = celltype[cells],gap = 3,
+                     n = 500,perplexity = 70) +
+  labs(y = "membership",title = "cell-type factors",
+       fill = "factor",color = "factor")
+p3 <- structure_plot(L[cells,],topics = other_factors,
+                     grouping = celltype[cells],gap = 3,
+                     n = 500,perplexity = 70) +
+  labs(y = "membership",title = "other factors",
+       fill = "factor",color = "factor")
+plot_grid(p1,p2,p3,nrow = 3,ncol = 1)
+
+```
+
+We can see that the colors correspond to cell-type factors do not often co-occur in cells. Colors correspond to data-set factors do not often co-occur expect 4 and 20. We can investigate the co-occuring behavior between those two types of factors in the admixture barplot of all factors:
+
+```{r, warning=FALSE, message=FALSE}
+structure_plot(L[cells,],topics = c(1:23),
+               grouping = celltype[cells],gap = 3,
+               n = 500,perplexity = 70) +
+  labs(y = "membership",title = "cell-type factors",
+       fill = "factor",color = "factor")
+```
+
+For the purpose of the plot belows, I want to truncate the loading near 0 to exactly 0. I bevelie one can get this from the output of flashier NMF. But I haven't looked into the code too deeply so I coded up a quick Exponetial Spike and Slab model:
+
+```{r}
+## lambda1 large = spike; lambda2 small = slab component
+exp_SnS <- function(x, pi_init=0.5, lambda1=50, lambda2_init=0.1,
+                       tol=1e-8, max_iter=1000) {
+  n <- length(x)
+  
+  # initialize
+  pi <- pi_init
+  lambda2 <- lambda2_init
+  loglik_old <- -Inf
+  
+  for (iter in 1:max_iter) {
+    # E-step: responsibilities
+    dens1 <- lambda1 * exp(-lambda1 * x)
+    dens2 <- lambda2 * exp(-lambda2 * x)
+    w <- pi * dens2 / ((1 - pi) * dens1 + pi * dens2)
+    
+    # M-step
+    pi <- mean(w)
+    # lambda1 <- sum(1 - w) / sum((1 - w) * x)
+    lambda2 <- sum(w) / sum(w * x)
+    
+    # log-likelihood
+    ll <- sum(log((1 - pi) * dens1 + pi * dens2))
+    if (abs(ll - loglik_old) < tol) break
+    loglik_old <- ll
+  }
+  
+  list(pi=pi, lambda1=lambda1, lambda2=lambda2, loglik=loglik_old, iter=iter)
+}
+
+V = L
+
+lambda1 = 250  ## for spike component
+for (k in 1:23){
+  x = L[ ,k]
+  ret = exp_SnS(x, lambda1 = 100, lambda2_init = 0.1)
+  pi = ret$pi
+  lambda2 = ret$lambda2
+  x_range <- seq(0, max(x), length.out=200)
+  y1 <- (1-pi) * dexp(x_range, rate=lambda1)
+  y2 <- pi * dexp(x_range, rate=lambda2)
+  # histogram with density scale
+  hist(x, breaks=50, freq=FALSE, col="lightgray",
+       border="white", main=paste0("Factor ", k),
+       xlab="x", ylab="Density")
+  # add pdf curves
+  lines(x_range, y1, col="blue", lwd=2)
+  lines(x_range, y2, col="red", lwd=2, lty=2)
+  
+  thresh = x_range[sum(y1 > y2)]
+  V[, k] = (L[, k] > thresh) * L[, k]
+  # legend
+  legend("topright", legend=c(paste0("Exp(", lambda1, ")"),
+                              paste0("Exp(", lambda2, ")")),
+         col=c("blue", "red"), lwd=2, lty=c(1,2))
+}
+
+
+```
+
+Let $V$ denote the truncated $L$ based on the Spike and Slab model. Now let's use igraph to draw the second order moment of $V$. 
+
+```{r}
+N = dim(V)[1]
+# df <- as.data.frame(V)
+# library(dplyr)
+# a =df %>%
+#   group_by(across(everything())) %>%
+#   summarise(count = n(), .groups = "drop")
+# b = sort(a$count / N, decreasing = TRUE)
+
+colnames(V) <- c(1:23)
+
+M1 = colSums(V)
+M2 = t(V) %*% V
+
+# A = M2 / ((tcrossprod(M1))^{1/2})
+A = M2  ## later it is worth to try out different definition of adjacency matrix
+diag(A) = 0
+A = A / max(A) * 5
+
+g <- graph_from_adjacency_matrix(A, mode = "undirected", weighted=TRUE)
+
+library(Polychrome)
+data(glasbey)
+colors = glasbey[2:24]
+
+group1 = c(1, 2, 3, 4, 20, 5, 7, 8, 9, 10, 22, 23)
+group2 = c(6, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21)
+n1 = length(group1)
+n2 = length(group2)
+rm(pi)   # remove user-defined pi in the mixture model, restore built-in
+theta1 <- rev(seq(0, pi, length.out = n1+2)[-c(1,n1+2)])   # upper
+theta2 <- seq(pi, 2*pi, length.out = n2+2)[-c(1,n2+2)] # lower
+
+# Coordinates
+layout <- matrix(0, nrow=vcount(g), ncol=2)
+layout[group1, ] <- cbind(cos(theta1), sin(theta1)) 
+layout[group2, ] <- cbind(cos(theta2), sin(theta2))
+
+
+plot(g,
+     layout=layout,
+     vertex.size = 12,
+     vertex.label.cex = 1.2,
+     vertex.color = colors,
+     edge.color = "gray40",
+     edge.width = E(g)$weight,   # scale edge thickness by weight
+     layout = layout_with_fr)
+```
+
+By investigating this, we can see that the co-occuring is small within groups, but large between groups. 
+
+Let us try to present it in a tree-like graph
+
+```{r}
+
+group1 = c(1, 10, 9, 22, 23)
+group2 = c(4, 20, 2, 3, 5, 6, 7, 8)
+group3 = c(6, 11, 12, 18, 19, 21, 13, 14, 15, 16, 17)
+
+n1 = length(group1)
+n2 = length(group2)
+n3 = length(group3)
+
+x1 = seq(-n1, n1, length.out = n1+2)[-c(1,n1+2)]
+x2 = seq(-n2, n2, length.out = n2+2)[-c(1,n2+2)]
+x3 = seq(-n3, n3, length.out = n3+2)[-c(1,n3+2)]
+# Coordinates
+layout <- matrix(0, nrow=vcount(g), ncol=2)
+layout[group1, ] <- cbind(x1, rep(3, n1))
+layout[group2, ] <- cbind(x2, rep(2, n2))
+layout[group3, ] <- cbind(x3, rep(1, n3))
+
+plot(g,
+     layout=layout,
+     vertex.size = 12,
+     vertex.label.cex = 1.2,
+     vertex.color = colors,
+     edge.color = "gray40",
+     edge.width = E(g)$weight,   # scale edge thickness by weight
+     layout = layout_with_fr)
+
+
+``` 
+
+The question remains how to automatically order the factors (i.e., position factors in igraph). 
+
+1) How to decide if two factors are not co-occuring at all?
+2) How to define the nested structure of factors?

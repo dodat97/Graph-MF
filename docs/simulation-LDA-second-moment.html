@@ -525,15 +525,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdodat97GraphMFtree31443b1865abffb7325ac029fb951e116b996e9dtargetblank31443b1a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdodat97GraphMFtreebd71de83568069f9a3e74db7a9a670800e782factargetblankbd71de8a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/dodat97/Graph-MF/tree/31443b1865abffb7325ac029fb951e116b996e9d" target="_blank">31443b1</a>
+<a href="https://github.com/dodat97/Graph-MF/tree/bd71de83568069f9a3e74db7a9a670800e782fac" target="_blank">bd71de8</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomdodat97GraphMFtree31443b1865abffb7325ac029fb951e116b996e9dtargetblank31443b1a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomdodat97GraphMFtreebd71de83568069f9a3e74db7a9a670800e782factargetblankbd71de8a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -543,7 +543,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/dodat97/Graph-MF/tree/31443b1865abffb7325ac029fb951e116b996e9d" target="_blank">31443b1</a>.
+<a href="https://github.com/dodat97/Graph-MF/tree/bd71de83568069f9a3e74db7a9a670800e782fac" target="_blank">bd71de8</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -622,6 +622,41 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/bd71de83568069f9a3e74db7a9a670800e782fac/analysis/simulation-LDA-second-moment.Rmd" target="_blank">bd71de8</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd",
+"analysis/simulation-LDA-second-moment.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/dodat97/Graph-MF/4238f5b2681671b037fab121cb5886147c8bbc54/docs/simulation-LDA-second-moment.html" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/31443b1865abffb7325ac029fb951e116b996e9d/analysis/simulation-LDA-second-moment.Rmd" target="_blank">31443b1</a>
 </td>
 <td>
@@ -682,7 +717,8 @@ Allocation (LDA).</p>
 <pre class="r"><code>library(igraph)
 library(MASS)
 library(MCMCpack)
-library(RColorBrewer)</code></pre>
+library(RColorBrewer)
+set.seed(1)</code></pre>
 <p>Data generating distribution</p>
 <pre class="r"><code>### Bifurcating tree L (each row is either 0 or exponentially distributed)
 rMixPostiveManifold &lt;- function(n, pis, rates){
@@ -776,6 +812,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-2-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/2b36a212d9248627a7f319f40defb1ba8771c8cf/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-2-1.png" target="_blank">2b36a21</a>
 </td>
 <td>
@@ -830,6 +877,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-3-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/2b36a212d9248627a7f319f40defb1ba8771c8cf/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-3-1.png" target="_blank">2b36a21</a>
 </td>
 <td>
@@ -852,22 +910,23 @@ barplot.</p>
 library(topicmodels)
 library(tm)</code></pre>
 <pre><code>Loading required package: NLP</code></pre>
-<pre class="r"><code>V = 20
+<pre class="r"><code>V = 50
 K = 7
 beta &lt;- matrix(0, nrow = K, ncol = V)
 for (k in 1:K) {
-  beta[k, ] &lt;- rdirichlet(1, alpha = rep(0.2, V))  
+  beta[k, ] &lt;- rdirichlet(1, alpha = rep(0.1, V))  
 }
 
 doc_word_prob = L %*% beta
 doc_mat = matrix(0, nrow = n, ncol = V)
 for (d in 1:n){
-  doc_mat[d, ] = rmultinom(1, size=200, prob=doc_word_prob[d, ])
+  doc_mat[d, ] = rmultinom(1, size=100, prob=doc_word_prob[d, ])
 }
 ### It is interesting that setting size small (=50) will give uniform posterior
 
 print(doc_mat[3, ])</code></pre>
-<pre><code> [1]  0  2  0  0 11  1  4  0  5 50  0  6  0  0 30 18  0  0  0 73</code></pre>
+<pre><code> [1]  0  0  7  1  0  0  0  0  2  0  0  0 35  0  0  0  1 12  0  0  0  0  0 15  2
+[26]  0  1  0  0  0  0  0  0  1 14  0  0  0  1  0  0  3  0  3  0  0  0  2  0  0</code></pre>
 <pre class="r"><code>colnames(doc_mat) &lt;- paste0(&quot;w&quot;, 1:V)
 rownames(doc_mat) &lt;- paste0(&quot;d&quot;, 1:n)
 dtm &lt;- as.DocumentTermMatrix(as.matrix(doc_mat), weighting = weightTf)
@@ -904,6 +963,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-4-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/2b36a212d9248627a7f319f40defb1ba8771c8cf/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-4-1.png" target="_blank">2b36a21</a>
@@ -958,6 +1028,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-5-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/2b36a212d9248627a7f319f40defb1ba8771c8cf/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-5-1.png" target="_blank">2b36a21</a>
 </td>
 <td>
@@ -999,6 +1080,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-6-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/2b36a212d9248627a7f319f40defb1ba8771c8cf/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-6-1.png" target="_blank">2b36a21</a>
@@ -1096,6 +1188,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/2b36a212d9248627a7f319f40defb1ba8771c8cf/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-1.png" target="_blank">2b36a21</a>
 </td>
 <td>
@@ -1109,7 +1212,234 @@ dodat97
 </table>
 </div>
 </div>
-<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-2">
+Past versions of unnamed-chunk-7-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-2.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-3">
+Past versions of unnamed-chunk-7-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-3.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-4">
+Past versions of unnamed-chunk-7-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-4.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-5">
+Past versions of unnamed-chunk-7-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-5.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-6">
+Past versions of unnamed-chunk-7-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-6.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-7">
+Past versions of unnamed-chunk-7-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-7.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>A_hat = t(V) %*% V
 diag(A_hat) = 0
 A_adj = A_hat / max(A_hat) * 8
@@ -1123,8 +1453,45 @@ plot(g,
      edge.color = &quot;gray40&quot;,
      edge.width = E(g)$weight,   # scale edge thickness by weight
      layout = layout_with_fr)</code></pre>
-<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
-We almost recover the true graph.</p>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-8-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We almost recover the true graph.</p>
 <p>Now let’s challenge it by over-fitting the topic model.</p>
 <pre class="r"><code>lda_fit &lt;- LDA(doc_mat, k = 8, method = &quot;VEM&quot;, control = list(seed = 123))
 L_hat &lt;- posterior(lda_fit)$topics  # doc-topic distributions
@@ -1133,6 +1500,43 @@ barplot(t(L_hat[(1:n)%%5==0, ]), beside = FALSE, col = colors7,
         border = NA, space = 0,
         ylab = &quot;Proportion&quot;, las = 2)</code></pre>
 <p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-9-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>A_hat = t(L_hat) %*% L_hat
 diag(A_hat) = 0
 A_adj = A_hat / max(A_hat) * 8
@@ -1147,6 +1551,43 @@ plot(g,
      edge.width = E(g)$weight,   # scale edge thickness by weight
      layout = layout_with_fr)</code></pre>
 <p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-2">
+Past versions of unnamed-chunk-9-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-9-2.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Let’s truncate the result and plot again</p>
 <pre class="r"><code>lambda1 = 200  ## for spike component
 V = L_hat
@@ -1173,7 +1614,310 @@ for (k in 1:8){
                               paste0(&quot;Exp(&quot;, lambda2, &quot;)&quot;)),
          col=c(&quot;blue&quot;, &quot;red&quot;), lwd=2, lty=c(1,2))
 }</code></pre>
-<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-1.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-2">
+Past versions of unnamed-chunk-10-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-2.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-3">
+Past versions of unnamed-chunk-10-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-3.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-4">
+Past versions of unnamed-chunk-10-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-4.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-5">
+Past versions of unnamed-chunk-10-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-5.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-6">
+Past versions of unnamed-chunk-10-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-6.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-7">
+Past versions of unnamed-chunk-10-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-7.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-8">
+Past versions of unnamed-chunk-10-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-8.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>A_hat = t(V) %*% V
 diag(A_hat) = 0
 A_adj = A_hat / max(A_hat) * 8
@@ -1188,6 +1932,45 @@ plot(g,
      edge.width = E(g)$weight,   # scale edge thickness by weight
      layout = layout_with_fr)</code></pre>
 <p><img src="figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-9">
+Past versions of unnamed-chunk-10-9.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-9.png" target="_blank">4238f5b</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We can see that one over-fitted topic have very similar behavior with
+a topic. How to merge them?</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

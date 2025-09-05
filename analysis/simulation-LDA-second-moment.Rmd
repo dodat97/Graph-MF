@@ -164,7 +164,7 @@ Plot the adajacency matrix
 
 A_hat = t(L_hat) %*% L_hat
 diag(A_hat) = 0
-A_adj = A_hat / max(A_hat) * 8
+A_adj = A_hat / max(A_hat) * 4
 g <- graph_from_adjacency_matrix(A_adj, mode = "undirected", weighted=TRUE)
 
 # Plot it
@@ -249,7 +249,7 @@ for (k in 1:7){
 ```{r}
 A_hat = t(V) %*% V
 diag(A_hat) = 0
-A_adj = A_hat / max(A_hat) * 8
+A_adj = A_hat / max(A_hat) * 4
 g <- graph_from_adjacency_matrix(A_adj, mode = "undirected", weighted=TRUE)
 
 # Plot it
@@ -320,7 +320,7 @@ for (k in 1:8){
 
 A_hat = t(V) %*% V
 diag(A_hat) = 0
-A_adj = A_hat / max(A_hat) * 8
+A_adj = A_hat / max(A_hat) * 4
 g <- graph_from_adjacency_matrix(A_adj, mode = "undirected", weighted=TRUE)
 
 # Plot it

@@ -14,4 +14,4 @@ Experiments: Inferring hierarchical structure of factors and loadings in (Sparse
 
 + [Simulation with LDA model](simulation-LDA-second-moment.html)
 
-+ [Visualize cancer data](cancer-visual.html)
++ [Visualize cancer data.](cancer-visual.html)

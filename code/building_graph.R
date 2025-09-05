@@ -72,49 +72,115 @@ for (i in 1:p) {
           dmat[i, ] <- NA  # or 0 if you prefer
      }
 }
-library(igraph)
-g <- graph_from_adjacency_matrix(dmat,
-                                 mode = "undirected", 
-                                 weighted = TRUE,
-                                 diag = FALSE)
-
-## Function to generate semicircle coordinates
-semi_circle <- function(k, radius = 1, translate = 0, top = TRUE) {
-     # angles equally spaced from 0 to pi (top) or pi to 2pi (bottom)
-     if (top) {
-          angles <- seq(0, pi, length.out = k + 2)[-c(1, k + 2)] # exclude ends
-     } else {
-          angles <- seq(pi, 2*pi, length.out = k + 2)[-c(1, k + 2)]
-     }
-     x <- radius * cos(angles) 
-     y <- radius * sin(angles) + translate
-     cbind(x, y)
-}
-# c(1,2,3,7,8,9,11,12,15,19,20)
-# GEP_top = c(4, 5, 6, 10, 13, 14, 16, 17, 18)
+# library(igraph)
+# g <- graph_from_adjacency_matrix(dmat,
+#                                  mode = "undirected", 
+#                                  weighted = TRUE,
+#                                  diag = FALSE)
+# 
+# ## Function to generate semicircle coordinates
+# semi_circle <- function(k, radius = 1, translate = 0, top = TRUE) {
+#      # angles equally spaced from 0 to pi (top) or pi to 2pi (bottom)
+#      if (top) {
+#           angles <- seq(0, pi, length.out = k + 2)[-c(1, k + 2)] # exclude ends
+#      } else {
+#           angles <- seq(pi, 2*pi, length.out = k + 2)[-c(1, k + 2)]
+#      }
+#      x <- radius * cos(angles) 
+#      y <- radius * sin(angles) + translate
+#      cbind(x, y)
+# }
+# # c(1,2,3,7,8,9,11,12,15,19,20)
+# # GEP_top = c(4, 5, 6, 10, 13, 14, 16, 17, 18)
 # GEP_mid = c(1, 7, 2, 3)
-col_sums <- colSums(dmat)
-# compute tertile cutoffs (33% and 67%)
-qs <- quantile(col_sums, probs = c(0.25, 0.5, 0.75))
+# # col_sums <- colSums(dmat)
+# # # compute tertile cutoffs (33% and 67%)
+# # qs <- quantile(col_sums, probs = c(0.25, 0.5, 0.75))
+# # 
+# # GEP_top = which(col_sums>qs[3])
+# # # GEP_mid = which(col_sums >= qs[2] & col_sums< qs[3])
+# GEP_bot = setdiff(c(1:11), GEP_mid)
+# # Generate coordinates
+# coords_top <- semi_circle(length(GEP_top), radius = 5, translate = 10, top = TRUE)
+# coords_mid <- semi_circle(length(GEP_mid), radius = 5, top = TRUE)
+# coords_bottom <- semi_circle(length(GEP_bot), radius = 5, translate = -5, top = FALSE)
+# 
+# layout_coords <- matrix(0, nrow = 11, ncol = 2)
+# layout_coords[GEP_top, ] = coords_top
+# # layout_coords[GEP_mid, ] = coords_mid
+# layout_coords[GEP_bot, ] = coords_bottom
+# 
+# plot(g,
+#      layout = layout_coords,
+#      vertex.size = 15,
+#      vertex.label.cex = 1.2,
+#      vertex.color = "skyblue",
+#      edge.color = "gray40",
+#      edge.width = E(g)$weight*0.5,   # scale edge thickness by weight
+#      layout = layout_with_fr)
 
-GEP_top = which(col_sums>qs[3])
-# GEP_mid = which(col_sums >= qs[2] & col_sums< qs[3])
-GEP_bot = setdiff(c(1:11), GEP_top)
+
+library(igraph)
+
+# example: build a directed graph from adjacency matrix
+g <- graph_from_adjacency_matrix(
+     dmat,
+     mode = "directed",   # <-- directed instead of undirected
+     weighted = TRUE,
+     diag = FALSE
+)
+
+# assign colors based on weight ranges
+E(g)$color <- ifelse(E(g)$weight >= 0.8 & E(g)$weight <= 1, "red",
+                     ifelse(E(g)$weight >= 0   & E(g)$weight < 0.2, "lightgray",
+                            ifelse(E(g)$weight >= 0.2 & E(g)$weight < 0.5, "pink",
+                                   ifelse(E(g)$weight >= 0.5 & E(g)$weight < 0.8, "orange", "black"))))
+
+
+
+# Count how many red/orange edges each node has
+important_edges <- E(g)[color %in% c("red", "orange")]
+
+# Initialize counts
+imp_counts <- rep(0, vcount(g))
+
+# Count how many important edges touch each node
+for (e in important_edges) {
+     nodes <- ends(g, e, names = FALSE)   # numeric vertex IDs
+     imp_counts[nodes] <- imp_counts[nodes] + 1
+}
+
+# Threshold rule: nodes with counts above median go to GEP_mid
+threshold <- median(imp_counts)
+
+GEP_mid <- which(imp_counts > threshold)
+GEP_bot <- setdiff(1:vcount(g), GEP_mid)
+
 # Generate coordinates
-coords_top <- semi_circle(length(GEP_top), radius = 5, translate = 10, top = TRUE)
 coords_mid <- semi_circle(length(GEP_mid), radius = 5, top = TRUE)
 coords_bottom <- semi_circle(length(GEP_bot), radius = 5, translate = -5, top = FALSE)
 
-layout_coords <- matrix(0, nrow = 11, ncol = 2)
-layout_coords[GEP_top, ] = coords_top
-# layout_coords[GEP_mid, ] = coords_mid
-layout_coords[GEP_bot, ] = coords_bottom
+layout_coords <- matrix(0, nrow = vcount(g), ncol = 2)
+layout_coords[GEP_mid, ] <- coords_mid
+layout_coords[GEP_bot, ] <- coords_bottom
 
-plot(g,
+# edge labels = weights
+E(g)$label <- round(E(g)$weight, 2)
+
+# edge curvature: assign small curvature so opposite edges bend apart
+E(g)$curved <- 0.2 * (as.numeric(as.factor(paste0(ends(g, es=E(g))[,1], "_", ends(g, es=E(g))[,2]))) %% 2 * 2 - 1)
+
+# now plot
+plot(
+     g,
      layout = layout_coords,
      vertex.size = 15,
      vertex.label.cex = 1.2,
      vertex.color = "skyblue",
-     edge.color = "gray40",
-     edge.width = E(g)$weight*5,   # scale edge thickness by weight
-     layout = layout_with_fr)
+     edge.width = E(g)$weight * 2,   # thickness by weight
+     edge.color = E(g)$color,        # colors from mapping
+     edge.arrow.size = 0.1,          # smaller arrows
+     edge.label = round(E(g)$weight, 2),
+     edge.label.cex = 0.8,
+     edge.curved = TRUE
+)

@@ -6,7 +6,6 @@ output:
   workflowr::wflow_html:
     toc: true
     toc_float: true
-    code_folding: hide
 ---
 
 The goal of this project is to visualize the relationship between factors in (Sparse) Matrix Factorization and topics in Latent Dirichlet Allocation (LDA). 

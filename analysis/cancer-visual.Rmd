@@ -1,5 +1,5 @@
 ---
-title: "Cancer data visualization"
+title: "Cancer data visualization."
 author: "Linh Do"
 date: "2025-09-05"
 output:

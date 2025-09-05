@@ -49,7 +49,7 @@ head(hnscc$info)
 
 #############
 # Visualization
-setwd("~/Documents/Graph-MF")
+setwd("~/Documents/Prof Dat/Graph-MF")
 # L = loadRDS(here("data","cancer_L.rds"))
 L = readRDS('data/cancer_L.rds')
 dim(L)

@@ -10,5 +10,7 @@ editor_options:
 
 Experiments: Inferring hierarchical structure of factors and loadings in (Sparse) Matrix Factorization.
 
+[Visualize Co-occuring pattern of factors in Pancreas data]("pancreas-visual.html")
+
 [Simple tree inference by using second-order moment in LDA models]()
 

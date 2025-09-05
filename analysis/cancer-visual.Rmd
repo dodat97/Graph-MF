@@ -1,0 +1,177 @@
+---
+title: "Cancer data visualization"
+author: "Linh Do"
+date: "2025-09-05"
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+    code_folding: hide
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 10, fig.height = 8, dpi = 150)
+```
+
+```{r,message=FALSE, warning=FALSE, include=FALSE}
+library(Matrix)
+library(ggplot2)
+library(cowplot)
+library(ggrepel)
+library(pheatmap)
+library(Rtsne)
+library(flashier)
+library(gbcd)
+library(tidyverse)
+library(dbplyr)
+
+data(hnscc)
+dim(hnscc$Y)
+head(hnscc$info)
+# L = loadRDS(here("data","cancer_L.rds"))
+
+```
+
+# Matrix L visualization
+
+```{r, warning=FALSE, message=FALSE}
+L = readRDS('data/cancer_L.rds')
+anno <- data.frame(sample = hnscc$info$sample, subtype = hnscc$info$subtype)
+rownames(anno) <- rownames(L)
+anno_colors <- list(sample = hnscc$sample_col, subtype = hnscc$subtype_col)
+cols <- colorRampPalette(c("gray96", "red"))(50)
+brks <- seq(0, 1, 0.02)
+
+pheatmap(L[order(anno$sample), -c(1)], cluster_rows = FALSE,
+         cluster_cols = FALSE, show_rownames = FALSE, annotation_row = anno,
+         annotation_colors = anno_colors, annotation_names_row = FALSE,
+         angle_col = 45, fontsize = 9, color = cols, breaks = brks,
+         main = "")
+```
+
+# Convert matrix L to the binary matrix V contains all 0 and 1 and use V to build a graph
+
+```{r, message=FALSE, warning=FALSE}
+V = (L>2e-05)*1
+V_filter = V[,1+c(1,2,3,7,8,9,11,12,15,19,20)]
+motifs = unique(V_filter)
+counts <- as.data.frame(V_filter) %>%
+     group_by(across(everything())) %>%
+     summarise(count = n(), .groups = "drop") %>%
+     mutate(freq = count / sum(count) * 100)
+b = counts$freq
+
+# keep the most frequent rows until their cumulative frequency explains 95% of the data
+filtered_counts = counts %>%arrange(desc(freq)) %>%
+     mutate(cum_freq = cumsum(freq)) %>%
+     filter(cum_freq <= 95)
+
+#####
+df11 <- filtered_counts[, -( (ncol(filtered_counts)-2):ncol(filtered_counts) )]   # keep only the first 11 columns
+
+# convert to matrix for speed
+mat <- as.matrix(df11)
+
+# number of columns
+p <- ncol(mat)
+
+# initialize result matrix
+dmat <- matrix(0, nrow = p, ncol = p,
+               dimnames = list(colnames(mat), colnames(mat)))
+
+# compute d(i,j)
+for (i in 1:p) {
+     idx_i <- which(mat[, i] != 0)               # nonzero indices in column i
+     denom <- length(idx_i)                      # denominator
+     if (denom > 0) {
+          for (j in 1:p) {
+               idx_j <- which(mat[, j] != 0)
+               numer <- length(intersect(idx_i, idx_j)) # common nonzero indices
+               dmat[i, j] <- numer / denom
+          }
+     } else {
+          dmat[i, ] <- NA  # or 0 if you prefer
+     }
+}
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(igraph)
+
+# example: build a directed graph from adjacency matrix
+g <- graph_from_adjacency_matrix(
+     dmat,
+     mode = "directed",   # <-- directed instead of undirected
+     weighted = TRUE,
+     diag = FALSE
+)
+
+semi_circle <- function(k, radius = 1, translate = 0, top = TRUE) {
+     # angles equally spaced from 0 to pi (top) or pi to 2pi (bottom)
+     if (top) {
+          angles <- seq(0, pi, length.out = k + 2)[-c(1, k + 2)] # exclude ends
+     } else {
+          angles <- seq(pi, 2*pi, length.out = k + 2)[-c(1, k + 2)]
+     }
+     x <- radius * cos(angles)
+     y <- radius * sin(angles) + translate
+     cbind(x, y)
+}
+# assign colors based on weight ranges
+E(g)$color <- ifelse(E(g)$weight >= 0.8 & E(g)$weight <= 1, "red",
+                     ifelse(E(g)$weight >= 0   & E(g)$weight < 0.2, "lightgray",
+                            ifelse(E(g)$weight >= 0.2 & E(g)$weight < 0.5, "pink",
+                                   ifelse(E(g)$weight >= 0.5 & E(g)$weight < 0.8, "orange", "black"))))
+
+
+
+# Count how many red/orange edges each node has
+important_edges <- E(g)[color %in% c("red", "orange")]
+
+# Initialize counts
+imp_counts <- rep(0, vcount(g))
+
+# Count how many important edges touch each node
+for (e in important_edges) {
+     nodes <- ends(g, e, names = FALSE)   # numeric vertex IDs
+     imp_counts[nodes] <- imp_counts[nodes] + 1
+}
+
+# Threshold rule: nodes with counts above median go to GEP_mid
+threshold <- median(imp_counts)
+
+GEP_mid <- which(imp_counts > threshold)
+GEP_bot <- setdiff(1:vcount(g), GEP_mid)
+
+# Generate coordinates
+coords_mid <- semi_circle(length(GEP_mid), radius = 5, top = TRUE)
+coords_bottom <- semi_circle(length(GEP_bot), radius = 5, translate = -5, top = FALSE)
+
+layout_coords <- matrix(0, nrow = vcount(g), ncol = 2)
+layout_coords[GEP_mid, ] <- coords_mid
+layout_coords[GEP_bot, ] <- coords_bottom
+
+# edge labels = weights
+E(g)$label <- round(E(g)$weight, 2)
+
+# edge curvature: assign small curvature so opposite edges bend apart
+E(g)$curved <- 0.2 * (as.numeric(as.factor(paste0(ends(g, es=E(g))[,1], "_", ends(g, es=E(g))[,2]))) %% 2 * 2 - 1)
+
+# now plot
+plot(
+     g,
+     layout = layout_coords,
+     vertex.size = 15,
+     vertex.label.cex = 1.2,
+     vertex.color = "skyblue",
+     edge.width = E(g)$weight * 2,   # thickness by weight
+     edge.color = E(g)$color,        # colors from mapping
+     edge.arrow.size = 0.1,          # smaller arrows
+     edge.label = round(E(g)$weight, 2),
+     edge.label.cex = 0.8,
+     edge.curved = TRUE
+)
+
+```

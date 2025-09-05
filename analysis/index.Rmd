@@ -13,4 +13,4 @@ Experiments: Inferring hierarchical structure of factors and loadings in (Sparse
 [Visualize Co-occuring pattern of factors in Pancreas data](pancreas-visual.html)
 
 
-
+[Visualize cancer data](cancer-visual.html)

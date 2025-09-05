@@ -525,15 +525,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdodat97GraphMFtreebd71de83568069f9a3e74db7a9a670800e782factargetblankbd71de8a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdodat97GraphMFtree6aeeba25a530af4131704b28fa86f95080a5d795targetblank6aeeba2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/dodat97/Graph-MF/tree/bd71de83568069f9a3e74db7a9a670800e782fac" target="_blank">bd71de8</a>
+<a href="https://github.com/dodat97/Graph-MF/tree/6aeeba25a530af4131704b28fa86f95080a5d795" target="_blank">6aeeba2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomdodat97GraphMFtreebd71de83568069f9a3e74db7a9a670800e782factargetblankbd71de8a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomdodat97GraphMFtree6aeeba25a530af4131704b28fa86f95080a5d795targetblank6aeeba2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -543,7 +543,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/dodat97/Graph-MF/tree/bd71de83568069f9a3e74db7a9a670800e782fac" target="_blank">bd71de8</a>.
+<a href="https://github.com/dodat97/Graph-MF/tree/6aeeba25a530af4131704b28fa86f95080a5d795" target="_blank">6aeeba2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -617,6 +617,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/6aeeba25a530af4131704b28fa86f95080a5d795/analysis/simulation-LDA-second-moment.Rmd" target="_blank">6aeeba2</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd",
+"analysis/simulation-LDA-second-moment.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/dodat97/Graph-MF/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/simulation-LDA-second-moment.html" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -812,6 +847,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-2-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-2-1.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -875,6 +921,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-3-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-3-1.png" target="_blank">4238f5b</a>
@@ -965,6 +1022,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-4-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-4-1.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -992,7 +1060,7 @@ dodat97
 <p>Plot the adajacency matrix</p>
 <pre class="r"><code>A_hat = t(L_hat) %*% L_hat
 diag(A_hat) = 0
-A_adj = A_hat / max(A_hat) * 8
+A_adj = A_hat / max(A_hat) * 4
 g &lt;- graph_from_adjacency_matrix(A_adj, mode = &quot;undirected&quot;, weighted=TRUE)
 
 # Plot it
@@ -1026,6 +1094,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-5-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-5-1.png" target="_blank">4238f5b</a>
@@ -1080,6 +1159,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-6-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-6-1.png" target="_blank">4238f5b</a>
@@ -1188,6 +1278,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-1.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1237,6 +1338,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-2.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-2.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1273,6 +1385,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-3.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-3.png" target="_blank">4238f5b</a>
@@ -1313,6 +1436,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-4.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-4.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1349,6 +1483,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-5.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-5.png" target="_blank">4238f5b</a>
@@ -1389,6 +1534,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-6.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-6.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1427,6 +1583,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-7.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-7-7.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1442,7 +1609,7 @@ dodat97
 </div>
 <pre class="r"><code>A_hat = t(V) %*% V
 diag(A_hat) = 0
-A_adj = A_hat / max(A_hat) * 8
+A_adj = A_hat / max(A_hat) * 4
 g &lt;- graph_from_adjacency_matrix(A_adj, mode = &quot;undirected&quot;, weighted=TRUE)
 
 # Plot it
@@ -1476,6 +1643,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-8-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-8-1.png" target="_blank">4238f5b</a>
@@ -1522,6 +1700,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-9-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-9-1.png" target="_blank">4238f5b</a>
@@ -1573,6 +1762,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-9-2.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-9-2.png" target="_blank">4238f5b</a>
@@ -1639,6 +1839,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-1.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-1.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1675,6 +1886,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-2.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-2.png" target="_blank">4238f5b</a>
@@ -1715,6 +1937,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-3.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-3.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1751,6 +1984,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-4.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-4.png" target="_blank">4238f5b</a>
@@ -1791,6 +2035,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-5.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-5.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1827,6 +2082,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-6.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-6.png" target="_blank">4238f5b</a>
@@ -1867,6 +2133,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-7.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-7.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1905,6 +2182,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-8.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-8.png" target="_blank">4238f5b</a>
 </td>
 <td>
@@ -1920,7 +2208,7 @@ dodat97
 </div>
 <pre class="r"><code>A_hat = t(V) %*% V
 diag(A_hat) = 0
-A_adj = A_hat / max(A_hat) * 8
+A_adj = A_hat / max(A_hat) * 4
 g &lt;- graph_from_adjacency_matrix(A_adj, mode = &quot;undirected&quot;, weighted=TRUE)
 
 # Plot it
@@ -1954,6 +2242,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/dodat97/Graph-MF/blob/b98e4772644afe34fbc6b8fb6cf88824038b510c/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-9.png" target="_blank">b98e477</a>
+</td>
+<td>
+dodat97
+</td>
+<td>
+2025-09-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/dodat97/Graph-MF/blob/4238f5b2681671b037fab121cb5886147c8bbc54/docs/figure/simulation-LDA-second-moment.Rmd/unnamed-chunk-10-9.png" target="_blank">4238f5b</a>
